@@ -65,7 +65,7 @@ The project will combine multiple wildfire datasets.
 Large wildfire detection dataset containing fire and smoke images.
 
 Dataset link  
-https://github.com/DeepQuestAI/D-Fire
+https://github.com/gaia-solutions-on-demand/DFireDataset
 
 Features
 - 20,000+ images
