@@ -31,6 +31,12 @@ data/wildfire/data/
 
 ## 2. Install Dependencies
 
+### Recommended python version
+
+```
+3.11
+```
+
 ### Create virtual environment (recommended)
 
 ```
