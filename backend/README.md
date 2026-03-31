@@ -11,7 +11,7 @@ Backend service providing APIs for image upload and model inference.
 
 ## Setup
 ```
-python -m venv venv
+python -m venv .venv
 pip install -r requirements.txt
 ```
 
