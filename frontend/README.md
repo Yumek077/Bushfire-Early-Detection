@@ -19,6 +19,7 @@ This version is currently a UI prototype (Mock Mode) without backend integration
 
 ## Getting Started
 ```
+cd frontend
 npm install
 npm run dev
 ```
