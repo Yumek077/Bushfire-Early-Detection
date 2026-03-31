@@ -8,7 +8,6 @@ function App() {
           <h1>Bushfire Smoke Detection Dashboard</h1>
           <p>Frontend prototype for smoke and fire detection</p>
         </div>
-        <div className="status-badge">Mock Mode</div>
       </header>
 
       <main className="main-layout">
