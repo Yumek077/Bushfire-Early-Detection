@@ -24,10 +24,9 @@ data/wildfire/data/
 ├── val/
 │   ├── images/
 │   └── labels/
-├── test/
-│   ├── images/
-│   └── labels/
-└── data.yaml
+└── test/
+    ├── images/
+    └── labels/
 ```
 
 ## Train
