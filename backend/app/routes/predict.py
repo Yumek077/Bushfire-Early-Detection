@@ -39,7 +39,7 @@ async def predict(
             width, height = image.size
 
         yolo_model = get_model(model)
-        results = yolo_model(str(file_path), conf=0.1)
+        results = yolo_model(str(file_path), conf=0.25)
         result = results[0]
 
         detections = []
