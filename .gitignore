@@ -51,7 +51,6 @@ venv.bak/
 
 runs/
 
-/models/*
-
 data/
 /data/
+/models/
