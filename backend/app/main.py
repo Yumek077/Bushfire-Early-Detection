@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routes.predict import router as predict_router
+
 app = FastAPI(title="Bushfire Detection API")
 
 app.add_middleware(
@@ -14,3 +16,5 @@ app.add_middleware(
 @app.get("/health")
 def health_check():
     return {"message": "Backend is running"}
+
+app.include_router(predict_router)
