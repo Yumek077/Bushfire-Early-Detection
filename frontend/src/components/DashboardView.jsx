@@ -32,11 +32,7 @@ function DashboardView({
       <header className="header">
         <div>
           <h1>Bushfire Smoke Detection Dashboard</h1>
-          <p>Frontend connected to FastAPI + YOLO detection backend</p>
-        </div>
-
-        <div className="status-badge">
-          {loading ? "Detecting..." : "System Ready"}
+          <p>A CNN Based Bushfire Smoke Detection AI</p>
         </div>
       </header>
 
@@ -50,7 +46,22 @@ function DashboardView({
             <option value="v8s">YOLOv8s</option>
           </select>
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <label className="upload-box">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+
+            <div className="upload-content">
+              {selectedFile ? (
+                <span>{selectedFile.name}</span>
+              ) : (
+                <span>Click to upload image</span>
+              )}
+            </div>
+          </label>
 
           <button className="primary-btn" onClick={handleDetect} disabled={loading}>
             {loading ? "Detecting..." : "Detect"}
