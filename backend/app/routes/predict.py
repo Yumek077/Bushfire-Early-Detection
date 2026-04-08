@@ -1,29 +1,25 @@
-from fastapi import APIRouter
+import shutil
+from fastapi import APIRouter, UploadFile, File, HTTPException
+from pathlib import Path
 
 router = APIRouter()
 
+UPLOAD_DIR = Path("temp_uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
+
 @router.post("/predict")
-def predict():
+async def predict(file: UploadFile = File(...)):
+    # Check if it's a picture
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Only image files are allowed.")
+
+    file_path = UPLOAD_DIR / file.filename
+
+    with file_path.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
     return {
-        "filename": "test.jpg",
-        "image_width": 1280,
-        "image_height": 720,
-        "detections": [
-            {
-                "class_name": "smoke",
-                "confidence": 0.86,
-                "bbox": [120, 80, 420, 300]
-            },
-            {
-                "class_name": "fire",
-                "confidence": 0.78,
-                "bbox": [650, 200, 820, 420]
-            }
-        ],
-        "risk_level": "high",
-        "summary": {
-            "smoke_count": 1,
-            "fire_count": 1,
-            "max_confidence": 0.86
-        }
+        "filename": file.filename,
+        "saved_path": str(file_path),
+        "message": "File received successfully"
     }
