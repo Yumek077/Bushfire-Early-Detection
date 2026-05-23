@@ -94,3 +94,22 @@ Among all tested configurations, 50 epochs provided the best balance between det
 | Recall | ~0.73 |
 | mAP50 | ~0.79 |
 | mAP50-95 | ~0.46 |
+
+# Quantitative Results
+
+| Experiment | Epochs | Precision | Recall | mAP50 | mAP50-95 |
+|---|---|---|---|---|---|
+| B1 | 30 | 0.758 | 0.699 | 0.771 | 0.446 |
+| B2 | 50 | 0.792 | 0.726 | 0.782 | 0.456 |
+| B3 | 80 | 0.801 | 0.733 | 0.792 | 0.468 |
+
+---
+
+### Overall Metric Analysis
+
+- Increasing training epochs improved overall wildfire detection performance.
+- The largest performance improvement occurred between 30 and 50 epochs.
+- After 50 epochs, the model continued improving slightly, but the gains became much smaller.
+- The 80-epoch experiment achieved the highest metrics overall, especially in Recall and mAP50-95.
+- However, the additional training time and computational cost were significantly higher.
+- The 50-epoch configuration provided the best balance between performance, convergence stability, and training efficiency.
