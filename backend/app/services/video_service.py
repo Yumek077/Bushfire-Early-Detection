@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+from app.services.model_service import get_model
 
 BOX_THICKNESS = 2
 LABEL_FONT = cv2.FONT_HERSHEY_SIMPLEX
@@ -12,6 +13,7 @@ CLASS_COLORS = {
     "fire": (68, 68, 239),
     "smoke": (93, 201, 244),
 }
+
 
 
 def _clamp_bbox(bbox, width: int, height: int):
@@ -29,6 +31,7 @@ def _clamp_bbox(bbox, width: int, height: int):
     return [x1, y1, x2, y2]
 
 
+
 def _bbox_to_roi(bbox, frame_shape):
     height, width = frame_shape[:2]
     x1, y1, x2, y2 = _clamp_bbox(bbox, width, height)
@@ -42,6 +45,7 @@ def _bbox_to_roi(bbox, frame_shape):
         return None
 
     return left, top, right, bottom
+
 
 
 def _extract_track_points(gray_frame, bbox):
@@ -67,6 +71,7 @@ def _extract_track_points(gray_frame, bbox):
     return points.astype(np.float32)
 
 
+
 def _detection_to_track(box, names, frame_shape, gray_frame):
     cls_id = int(box.cls[0].item())
     confidence = float(box.conf[0].item())
@@ -81,8 +86,10 @@ def _detection_to_track(box, names, frame_shape, gray_frame):
     }
 
 
+
 def _refresh_track_points(gray_frame, tracked_detection):
     tracked_detection["points"] = _extract_track_points(gray_frame, tracked_detection["bbox"])
+
 
 
 def _track_detections(prev_gray, gray_frame, tracked_detections, frame_shape):
@@ -141,6 +148,7 @@ def _track_detections(prev_gray, gray_frame, tracked_detections, frame_shape):
     return updated
 
 
+
 def _draw_detections(frame, tracked_detections):
     annotated = frame.copy()
 
@@ -174,12 +182,17 @@ def _draw_detections(frame, tracked_detections):
     return annotated
 
 
-def precess_video(
+
+def process_video(
         input_path: str,
         output_path: str,
-        model,
+        model="v8s",
         frame_skip: int = 5
 ):
+    yolo_model = get_model(model) if isinstance(model, str) else model
+    if isinstance(yolo_model, list):
+        yolo_model = yolo_model[0]
+
     cap = cv2.VideoCapture(input_path)
 
     if not cap.isOpened():
@@ -227,7 +240,7 @@ def precess_video(
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         if frame_index % frame_skip == 0:
-            results = model(frame, conf=0.4)
+            results = yolo_model(frame, conf=0.4)
             result = results[0] if isinstance(results, list) else results
             tracked_detections = []
 
@@ -270,3 +283,6 @@ def precess_video(
         "max_confidence": round(max_confidence, 4),
         "video_codec": selected_codec,
     }
+
+
+precess_video = process_video

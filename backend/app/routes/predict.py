@@ -1,14 +1,14 @@
-import uuid
 import json
-
-from fastapi import APIRouter, UploadFile, File, HTTPException, Query, Form
-from pathlib import Path
 import shutil
-from PIL import Image
+import uuid
+from pathlib import Path
+
 import cv2
+from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
+from PIL import Image
 
 from app.services.model_service import get_model
-from app.services.video_service import precess_video
+from app.services.video_service import process_video
 
 router = APIRouter()
 
@@ -18,6 +18,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 
 OUTPUT_DIR = BASE_DIR / "static"
 OUTPUT_DIR.mkdir(exist_ok=True)
+
 
 
 def calculate_risk(smoke_count: int, fire_count: int, max_confidence: float) -> str:
@@ -30,6 +31,7 @@ def calculate_risk(smoke_count: int, fire_count: int, max_confidence: float) -> 
     return "safe"
 
 
+
 def _media_type_from_suffix(file_path: Path) -> str:
     suffix = file_path.suffix.lower()
     if suffix in {".png", ".jpg", ".jpeg", ".webp"}:
@@ -39,8 +41,10 @@ def _media_type_from_suffix(file_path: Path) -> str:
     return "unknown"
 
 
+
 def _metadata_path_for_output(file_path: Path) -> Path:
     return file_path.with_suffix(f"{file_path.suffix}.json")
+
 
 
 def _save_output_metadata(file_path: Path, payload: dict):
@@ -78,16 +82,15 @@ async def recent_history(limit: int = Query(5, ge=1, le=20)):
 
     return {"items": items}
 
+
 @router.post("/predict")
 async def predict(
         file: UploadFile = File(...),
         model: str = Query("v8s")
 ):
-    # Check if it's a picture
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Only image files are allowed.")
 
-    # Save files
     input_filename = f"{uuid.uuid4()}_{file.filename}"
     output_filename = f"{uuid.uuid4()}_result.jpg"
     file_path = UPLOAD_DIR / input_filename
@@ -119,20 +122,21 @@ async def predict(
                 if class_name.lower() == "smoke":
                     smoke_count += 1
                 elif class_name.lower() == "fire":
-                    fire_count +=1
+                    fire_count += 1
 
                 max_confidence = max(max_confidence, conf)
 
                 detections.append({
                     "class_name": class_name,
                     "confidence": round(conf, 4),
-                    "bbox": [round(x, 2) for x in xyxy]
+                    "bbox": [round(x, 2) for x in xyxy],
                 })
 
         risk_level = calculate_risk(smoke_count, fire_count, max_confidence)
         annotated_image = result.plot()
         if not cv2.imwrite(str(output_path), annotated_image):
             raise ValueError("Failed to save output image.")
+
         response_payload = {
             "model_used": model,
             "filename": file.filename,
@@ -144,8 +148,8 @@ async def predict(
             "summary": {
                 "smoke_count": smoke_count,
                 "fire_count": fire_count,
-                "max_confidence": round(max_confidence, 4)
-            }
+                "max_confidence": round(max_confidence, 4),
+            },
         }
         _save_output_metadata(output_path, response_payload)
         return response_payload
@@ -154,12 +158,12 @@ async def predict(
         raise HTTPException(status_code=500, detail=str(e))
 
     finally:
-        # delete temp files
         try:
             if file_path.exists():
                 file_path.unlink()
         except PermissionError:
             print(f"Warning: could not delete temp file {file_path}")
+
 
 @router.post("/predict_video")
 async def predict_video(
@@ -179,16 +183,11 @@ async def predict_video(
         with input_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        yolo_model = get_model(model)
-
-        if isinstance(yolo_model, list):
-            yolo_model = yolo_model[0]
-
-        stats = precess_video(
+        stats = process_video(
             input_path=str(input_path),
             output_path=str(output_path),
-            model=yolo_model,
-            frame_skip=5
+            model=model,
+            frame_skip=5,
         )
 
         risk_level = calculate_risk(
@@ -206,7 +205,7 @@ async def predict_video(
                 "fire_count": stats["fire_frames"],
                 "max_confidence": stats["max_confidence"],
             },
-            **stats
+            **stats,
         }
         _save_output_metadata(output_path, response_payload)
         return response_payload

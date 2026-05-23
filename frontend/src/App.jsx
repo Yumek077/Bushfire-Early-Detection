@@ -34,9 +34,21 @@ function App() {
     fetchRecentHistory();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
 
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
@@ -47,6 +59,10 @@ function App() {
   };
 
   const handleClear = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
     setSelectedFile(null);
     setPreviewUrl("");
     setActiveHistoryItem(null);
@@ -56,6 +72,10 @@ function App() {
   };
 
   const handleHistorySelect = (historyItem) => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
     setActiveHistoryItem(historyItem);
     setSelectedFile(null);
     setPreviewUrl("");

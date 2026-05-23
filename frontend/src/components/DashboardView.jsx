@@ -36,6 +36,46 @@ function DashboardView({
 
   const riskClassName = displayedResult?.risk_level ? `risk-${displayedResult.risk_level}` : "";
 
+  const getDetectionPalette = (className) => {
+    if (className === "fire") {
+      return {
+        border: "#ef4444",
+        background: "rgba(239, 68, 68, 0.92)",
+      };
+    }
+
+    if (className === "smoke") {
+      return {
+        border: "#f4c95d",
+        background: "rgba(244, 201, 93, 0.92)",
+      };
+    }
+
+    return {
+      border: "#38d68d",
+      background: "rgba(56, 214, 141, 0.92)",
+    };
+  };
+
+  const getDetectionPriority = (className) => {
+    if (className === "smoke") return 0;
+    if (className === "fire") return 1;
+    return 2;
+  };
+
+  const getSafePreviewUrl = (urlValue) => {
+    if (!urlValue) return "";
+
+    try {
+      const parsed = new URL(urlValue, window.location.origin);
+      return parsed.protocol === "blob:" ? parsed.href : "";
+    } catch {
+      return "";
+    }
+  };
+
+  const safePreviewUrl = getSafePreviewUrl(previewUrl);
+
   const currentPreview = useMemo(() => {
     if (activeHistoryItem) {
       return {
@@ -55,21 +95,21 @@ function DashboardView({
       };
     }
 
-    if (result?.output_image_url) {
-      return {
-        src: `${apiBaseUrl}${result.output_image_url}`,
-        mediaType: "image",
-        isHistory: false,
-        name: selectedFile?.name || result.filename,
-      };
-    }
-
     if (previewUrl) {
       return {
         src: previewUrl,
         mediaType: "image",
         isHistory: false,
         name: selectedFile?.name || "Preview",
+      };
+    }
+
+    if (result?.output_image_url) {
+      return {
+        src: `${apiBaseUrl}${result.output_image_url}`,
+        mediaType: "image",
+        isHistory: false,
+        name: selectedFile?.name || result.filename,
       };
     }
 
@@ -124,8 +164,8 @@ function DashboardView({
           {(selectedFile || activeHistoryItem) && (
             <div className="info-item">
               <span className="label">File</span>
-            <span className="value">{selectedFile?.name || activeHistoryItem?.filename}</span>
-          </div>
+              <span className="value">{selectedFile?.name || activeHistoryItem?.filename}</span>
+            </div>
           )}
 
           {error && (
@@ -161,17 +201,70 @@ function DashboardView({
                   }}
                 />
               ) : (
-                <img
-                  key={currentPreview.src}
-                  src={currentPreview.src}
-                  alt="Preview"
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                    objectFit: "contain",
-                    borderRadius: "12px",
-                  }}
-                />
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  <img
+                    key={currentPreview.src}
+                    src={!currentPreview.isHistory && result && safePreviewUrl ? safePreviewUrl : currentPreview.src}
+                    alt="Preview"
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      objectFit: "contain",
+                      borderRadius: "12px",
+                      display: "block",
+                    }}
+                  />
+                  {!currentPreview.isHistory &&
+                    result &&
+                    safePreviewUrl &&
+                    result.image_width &&
+                    result.image_height &&
+                    [...(result.detections || [])]
+                      .sort(
+                        (a, b) =>
+                          getDetectionPriority(a.class_name) -
+                          getDetectionPriority(b.class_name)
+                      )
+                      .map((det, index) => {
+                        const [x1, y1, x2, y2] = det.bbox;
+                        const palette = getDetectionPalette(det.class_name);
+
+                        return (
+                          <div
+                            key={index}
+                            className="detection-box"
+                            style={{
+                              "--box-color": palette.border,
+                              "--box-delay": `${index * 90}ms`,
+                              position: "absolute",
+                              left: `${(x1 / result.image_width) * 100}%`,
+                              top: `${(y1 / result.image_height) * 100}%`,
+                              width: `${((x2 - x1) / result.image_width) * 100}%`,
+                              height: `${((y2 - y1) / result.image_height) * 100}%`,
+                              border: `2px solid ${palette.border}`,
+                              boxSizing: "border-box",
+                              borderRadius: "8px",
+                              boxShadow: `0 0 0 1px ${palette.border}33`,
+                            }}
+                          >
+                            <span
+                              className="detection-label"
+                              style={{
+                                background: palette.background,
+                                color: det.class_name === "smoke" ? "#111111" : "white",
+                                fontSize: "12px",
+                                fontWeight: 700,
+                                padding: "3px 6px",
+                                borderRadius: "6px 0 6px 0",
+                                display: "inline-block",
+                              }}
+                            >
+                              {det.class_name} ({det.confidence})
+                            </span>
+                          </div>
+                        );
+                      })}
+                </div>
               )
             ) : (
               <span>Image or video goes here</span>
@@ -204,7 +297,9 @@ function DashboardView({
 
           <div className="info-item">
             <span className="label">Max Confidence</span>
-            <span className="value">{displayedResult?.summary?.max_confidence ?? displayedResult?.max_confidence ?? "-"}</span>
+            <span className="value">
+              {displayedResult?.summary?.max_confidence ?? displayedResult?.max_confidence ?? "-"}
+            </span>
           </div>
 
           <div className="info-item">
