@@ -94,3 +94,21 @@ Among all tested configurations, the 640×640 setting achieved the best balance 
 | Recall | ~0.73 |
 | mAP50 | ~0.79 |
 | mAP50-95 | ~0.46 |
+
+# Quantitative Results
+
+| Experiment | Image Size | Precision | Recall | mAP50 | mAP50-95 |
+|---|---|---|---|---|---|
+| A1 | 512 × 512 | 0.789 | 0.712 | 0.778 | 0.449 |
+| A2 | 640 × 640 | 0.792 | 0.726 | 0.782 | 0.456 |
+| A3 | 768 × 768 | 0.790 | 0.731 | 0.789 | 0.456 |
+
+---
+
+### Overall Metric Analysis
+
+- Increasing image size improved Recall and mAP performance across the experiments.
+- The 640×640 and 768×768 settings achieved very similar results.
+- Larger image sizes helped the model capture more detailed wildfire smoke and fire features.
+- However, performance gains gradually became marginal at higher resolutions.
+- The 640×640 configuration provided the best balance between detection accuracy and computational efficiency.
