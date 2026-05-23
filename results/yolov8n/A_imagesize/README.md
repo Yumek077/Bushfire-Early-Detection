@@ -24,7 +24,7 @@ Device: NVIDIA Tesla T4
 Metric	Value
 Precision	0.763
 Recall	0.686
-mAP50	0.753
+mAP50	0.755
 mAP50-95	0.434
 ## Analysis
 
