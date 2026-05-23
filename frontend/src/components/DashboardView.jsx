@@ -74,6 +74,30 @@ function DashboardView({
     }
   };
 
+  const getSafeMediaUrl = (urlValue) => {
+    if (!urlValue) return "";
+
+    try {
+      const parsed = new URL(urlValue, window.location.origin);
+      const apiOrigin = new URL(apiBaseUrl, window.location.origin).origin;
+
+      if (parsed.protocol === "blob:") {
+        return parsed.href;
+      }
+
+      if (
+        ["http:", "https:"].includes(parsed.protocol) &&
+        (parsed.origin === window.location.origin || parsed.origin === apiOrigin)
+      ) {
+        return parsed.href;
+      }
+    } catch {
+      return "";
+    }
+
+    return "";
+  };
+
   const safePreviewUrl = getSafePreviewUrl(previewUrl);
 
   const currentPreview = useMemo(() => {
@@ -115,6 +139,8 @@ function DashboardView({
 
     return null;
   }, [activeHistoryItem, apiBaseUrl, previewUrl, result, selectedFile, videoResult]);
+
+  const safeCurrentPreviewSrc = currentPreview ? getSafeMediaUrl(currentPreview.src) : "";
 
   return (
     <div className="app">
@@ -187,11 +213,11 @@ function DashboardView({
           </div>
 
           <div className="image-box" style={{ position: "relative" }}>
-            {currentPreview ? (
+            {currentPreview && safeCurrentPreviewSrc ? (
               currentPreview.mediaType === "video" ? (
                 <video
-                  key={currentPreview.src}
-                  src={currentPreview.src}
+                  key={safeCurrentPreviewSrc}
+                  src={safeCurrentPreviewSrc}
                   controls
                   preload="metadata"
                   style={{
@@ -203,8 +229,8 @@ function DashboardView({
               ) : (
                 <div style={{ position: "relative", display: "inline-block" }}>
                   <img
-                    key={currentPreview.src}
-                    src={!currentPreview.isHistory && result && safePreviewUrl ? safePreviewUrl : currentPreview.src}
+                    key={safeCurrentPreviewSrc}
+                    src={!currentPreview.isHistory && result && safePreviewUrl ? safePreviewUrl : safeCurrentPreviewSrc}
                     alt="Preview"
                     style={{
                       maxWidth: "100%",
