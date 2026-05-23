@@ -38,31 +38,37 @@ Precision	0.780
 Recall	0.707
 mAP50	0.778
 mAP50-95	0.449
-Analysis
+## Analysis
 
-The 640×640 model achieved the best overall detection performance among all experiments. Precision, recall, and mAP50 all reached the highest values, while computational cost remained manageable.
+## Analysis
 
-This resolution provided a strong balance between feature detail and training efficiency.
+The 640×640 model achieved strong overall detection performance and provided a good balance between precision, recall, and computational efficiency.
+
+Although the 768×768 configuration produced slightly higher mAP values, the improvement was very limited while requiring higher computational cost and longer training time.
+
+Therefore, 640×640 was considered the most practical configuration for later experiments.
 
 ## A3 - 768 × 768
 Metric	Value
 Precision	0.777
 Recall	0.700
-mAP50	0.773
+mAP50	0.780
 mAP50-95	0.450
-Analysis
+## Analysis
 
-The 768×768 model provided slightly improved localization performance (mAP50-95) compared with 640×640, but the improvement was negligible.
+## Analysis
 
-Training time and computational cost increased noticeably, while overall detection performance did not improve significantly.
+The 768×768 model achieved the highest mAP50 (0.780) and slightly improved mAP50-95 (0.450), indicating slightly better localization performance.
 
-This suggests that excessively large image sizes may not provide practical benefits for this wildfire detection dataset.
+However, precision and recall did not improve compared with the 640×640 configuration, while training time and computational cost increased noticeably.
+
+This suggests that larger image sizes may provide marginal accuracy gains but do not offer practical overall advantages for this wildfire detection dataset.
 
 ## Comparison Analysis
 Experiment	Main Observation
-A1	Faster training but reduced detection accuracy
+A1	Lower image size reduced detection accuracy
 A2	Best balance between accuracy and efficiency
-A3	Slight localization gain with higher computational cost
+A3	Slight mAP improvement with higher computational costcomputational cost
 
 Additional observations:
 
@@ -72,11 +78,13 @@ Increasing image size beyond 640×640 did not significantly improve overall accu
 Larger image sizes required more computational resources and longer training time.
 ## Conclusion
 
-This experiment demonstrates that image size has a significant impact on wildfire smoke detection performance.
+## Conclusion
 
-Smaller image sizes reduce computational cost but may limit feature extraction capability, while excessively large image sizes increase training complexity without providing meaningful overall performance gains.
+This experiment demonstrates that image size has a significant influence on wildfire smoke detection performance.
 
-Among all tested configurations, 640×640 achieved the best balance between detection accuracy, training stability, and computational efficiency, making it the most suitable setting for this wildfire detection dataset.
+Smaller image sizes reduce computational cost but may weaken feature extraction ability, especially for small or distant smoke targets. Larger image sizes can provide slight improvements in detection metrics, but they also require more training time and computational resources.
+
+Although 768×768 achieved slightly higher mAP values, the improvement was marginal. Overall, 640×640 provided the best balance between detection performance, training efficiency, and practical usability, making it the preferred configuration for later experiments.
 
 ## Best Configuration
 Parameter	Value

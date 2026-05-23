@@ -39,26 +39,29 @@ Common training settings:
 
 ### Analysis
 
-The confidence threshold of 0.25 achieved the highest recall and best overall mAP performance.
+
+The confidence threshold of 0.25 achieved the highest recall and the best overall performance within the confidence threshold experiments.
 
 This setting allowed the model to detect more smoke and fire targets, especially smaller or less obvious wildfire regions. Although more prediction boxes may appear, the model missed fewer important targets.
 
+For wildfire early detection tasks, maintaining strong recall is generally more important than maximizing prediction strictness.
 ---
 
 ## C2 - Confidence 0.50
 
 | Metric | Value |
 |---|---|
-| Precision | 0.802 |
-| Recall | 0.596 |
+| Precision | 0.882 |
+| Recall | 0.586 |
 | mAP50 | 0.560 |
 | mAP50-95 | 0.347 |
 
 ### Analysis
 
-Increasing the confidence threshold to 0.50 improved precision and reduced false positives.
 
-However, recall dropped noticeably, meaning that some wildfire targets were missed. This setting provided cleaner predictions but reduced overall detection sensitivity.
+Increasing the confidence threshold to 0.50 significantly improved precision and reduced false positive detections.
+
+However, recall dropped noticeably, meaning that a considerable number of wildfire targets were missed. This setting produced cleaner predictions but reduced overall detection sensitivity and mAP performance.
 
 ---
 
@@ -83,7 +86,7 @@ However, recall dropped significantly, indicating that many smoke and fire targe
 
 | Experiment | Main Observation |
 |---|---|
-| C1 | Highest recall and best overall detection performance |
+| C1 |Highest recall and best overall detection |
 | C2 | Better precision but lower recall |
 | C3 | Highest precision but severe missed detections |
 
@@ -98,19 +101,20 @@ Additional observations:
 
 # Conclusion
 
+
 This experiment demonstrates a clear trade-off between precision and recall when adjusting confidence thresholds.
 
 Lower confidence thresholds detect more wildfire smoke and fire targets but may introduce more false positives. Higher confidence thresholds produce cleaner predictions but significantly increase missed detections.
 
-For wildfire early detection systems, missing smoke or fire targets is more dangerous than producing some extra prediction boxes.
+For wildfire early detection systems, missing smoke or fire targets is generally more dangerous than producing some additional prediction boxes.
 
-Therefore, **confidence threshold = 0.25 provides the best overall detection performance and is the most suitable setting for wildfire smoke detection in this project.**
+Therefore, confidence threshold = 0.25 provides the best practical balance for wildfire early detection in this experiment, especially because it maintains the strongest recall performance.
 
 ---
 
 # Best Configuration
 
-## Best Overall Detection
+## Best Practical Configuration
 
 | Parameter | Value |
 |---|---|
