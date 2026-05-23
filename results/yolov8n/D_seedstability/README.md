@@ -36,14 +36,16 @@ Deep learning training contains random initialization and stochastic behavior. T
 
 | Metric | Value |
 |---|---|
-| Precision | 0.766 |
-| Recall | 0.710 |
-| mAP50 | 0.771 |
-| mAP50-95 | 0.447 |
+| Precision | 0.780 |
+| Recall | 0.707 |
+| mAP50 | 0.778 |
+| mAP50-95 | 0.449 |
 
 ### Analysis
 
-The baseline seed (42) achieved strong overall wildfire detection performance and served as the reference configuration for later stability comparisons.
+The baseline seed (42) achieved the strongest overall performance in this seed stability experiment and served as the reference configuration for later comparisons.
+
+This result indicates that the default training configuration already provided stable and reliable wildfire detection performance.
 
 ---
 
@@ -91,18 +93,18 @@ Although some metrics fluctuated slightly, the differences remained very small a
 
 Additional observations:
 
-- Precision remained in a very narrow range (0.763–0.772)
+- Precision remained in a narrow range (0.763–0.780)
 - Recall remained stable (0.700–0.712)
-- mAP50 changed only slightly (0.771–0.773)
-- mAP50-95 remained highly consistent (0.444–0.447)
+- mAP50 changed only slightly (0.771–0.778)
+- mAP50-95 remained highly consistent (0.444–0.449)
 
 ---
 
 # Stability Discussion
 
-This experiment demonstrates that the current YOLOv8n wildfire smoke detection model is highly reproducible across different random seeds.
+This experiment demonstrates that the YOLOv8n wildfire smoke detection model is relatively stable across different random seeds.
 
-The performance differences between D1, D2, and D3 were very small, indicating that the final detection performance does not depend heavily on a specific random seed.
+The performance differences between D1, D2, and D3 were small, indicating that the final detection results were not strongly affected by random initialization.
 
 Compared with parameter tuning experiments (A/B/C), the D group focuses on:
 
@@ -137,15 +139,15 @@ as the default training setting for future experiments.
 
 # Recommended Configuration
 
-| Parameter | Value |
-|---|---|
-| Model | YOLOv8n |
-| Seed | 42 |
-| Image Size | 640 |
-| Epochs | 50 |
-| Batch Size | 16 |
-| Confidence Threshold | 0.25 |
-| Precision | 0.766 |
-| Recall | 0.710 |
-| mAP50 | 0.771 |
-| mAP50-95 | 0.447 |
+| Parameter            | Value     |
+| -------------------- | --------- |
+| Model                | YOLOv8n   |
+| Seed                 | 42        |
+| Image Size           | 640       |
+| Epochs               | 50        |
+| Batch Size           | 16        |
+| Confidence Threshold | 0.25      |
+| Precision            | 0.780 |
+| Recall               | 0.707 |
+| mAP50                | 0.778 |
+| mAP50-95             | 0.449 |

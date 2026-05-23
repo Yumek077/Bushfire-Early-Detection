@@ -58,18 +58,18 @@ It provided a strong balance between precision, recall, and localization accurac
 
 | Metric | Value |
 |---|---|
-| Precision | 0.761 |
-| Recall | 0.744 |
+| Precision | 0.764 |
+| Recall | 0.681 |
 | mAP50 | 0.756 |
 | mAP50-95 | 0.433 |
 
 ### Analysis
 
-Strong augmentation achieved the highest recall among all experiments.
+Strong augmentation reduced overall detection performance compared with the default augmentation strategy.
 
-This suggests that aggressive augmentation improved the model’s sensitivity to difficult wildfire smoke and fire targets.
+Precision, recall, and mAP metrics all decreased, suggesting that aggressive augmentation introduced additional visual noise and made the model less stable during wildfire smoke and fire detection.
 
-However, precision and mAP performance decreased, indicating that the model produced more unstable predictions and false positives.
+This indicates that stronger augmentation did not improve generalization on the current wildfire dataset.
 
 ---
 
@@ -92,17 +92,20 @@ Compared with E2, predictions became more stable, but the overall performance st
 
 # Comparison Analysis
 
-| Experiment | Main Observation |
-|---|---|
-| E1 | Best overall detection performance |
-| E2 | Highest recall but more unstable predictions |
-| E3 | Stable performance but limited improvement |
+| Experiment | Main Observation                                    |
+| E1         | Best overall detection performance  |
+| E2         | Aggressive augmentation reduced
+               overall performance |
+| E3         | Stable performance but limited improvement |
+
 
 Additional observations:
 
-- Strong augmentation improved recall but reduced precision.
-- Aggressive augmentation increased model sensitivity.
-- Reduced Mosaic maintained stable smoke texture learning.
+Additional observations:
+
+- Strong augmentation reduced both precision and recall.
+- Aggressive augmentation introduced additional training noise.
+- Reduced Mosaic maintained relatively stable performance.
 - Default augmentation achieved the best balance across all performance metrics.
 
 ---
@@ -111,21 +114,21 @@ Additional observations:
 
 ## E2 - Strong Augmentation
 
-E2 achieved the highest recall (0.744), indicating that the model became more sensitive to wildfire smoke and fire targets.
+Strong augmentation did not improve wildfire smoke detection performance on the current dataset.
 
-Possible advantages include:
+Possible reasons include:
 
-- Better distant smoke detection
-- Improved robustness under lighting variation
-- Better adaptability to complex wildfire scenes
+- Excessive visual distortion
+- More unstable smoke texture representation
+- Increased difficulty in feature learning
 
-However:
+Observed effects:
 
 - Precision decreased
+- Recall decreased
 - mAP performance decreased
-- More unstable predictions appeared
 
-This indicates that stronger augmentation made the model more aggressive but less precise.
+This indicates that stronger augmentation made training less stable and did not improve practical wildfire detection performance in this experiment.
 
 ---
 
@@ -145,9 +148,8 @@ This experiment demonstrates that augmentation strategy affects wildfire smoke d
 
 ### Main Conclusions
 
-- Strong augmentation improved recall and sensitivity
-- Strong augmentation also reduced precision and overall mAP
-- Reduced Mosaic maintained stable performance
+- Strong augmentation reduced overall detection performance
+- Reduced Mosaic maintained relatively stable performance
 - Default YOLOv8 augmentation achieved the best overall balance
 
 The results suggest that:
@@ -180,7 +182,7 @@ Therefore, the project will continue using the default YOLOv8 augmentation strat
 | mAP50 | 0.778 |
 | mAP50-95 | 0.449 |
 
-## Highest Recall
+## Alternative Augmentation Setting
 
 | Parameter | Value |
 |---|---|
@@ -188,7 +190,7 @@ Therefore, the project will continue using the default YOLOv8 augmentation strat
 | Augmentation | Strong |
 | Image Size | 640 |
 | Epochs | 50 |
-| Precision | 0.761 |
-| Recall | 0.744 |
+| Precision | 0.764 |
+| Recall | 0.681 |
 | mAP50 | 0.756 |
 | mAP50-95 | 0.433 |

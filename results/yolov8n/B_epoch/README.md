@@ -73,9 +73,11 @@ This setting provided a strong balance between detection accuracy and training e
 
 ### Analysis
 
-The 80-epoch model achieved the best overall numerical performance among all experiments.
+The 80-epoch model achieved the highest numerical performance across all evaluation metrics.
 
-However, compared with B2, the improvements were relatively small while training cost increased noticeably, indicating diminishing returns from additional training.
+Compared with B2, precision, recall, mAP50, and mAP50-95 all improved slightly, indicating that additional training helped the model learn more robust wildfire smoke and fire features.
+
+However, the improvements over the 50-epoch configuration were relatively small while training cost increased noticeably, suggesting diminishing returns from longer training.
 
 ---
 
@@ -96,13 +98,14 @@ Additional observations:
 
 ---
 
+
 # Conclusion
 
-This experiment demonstrates that increasing the number of epochs improves wildfire smoke detection performance up to a certain point.
+This experiment demonstrates that increasing the number of training epochs improves wildfire smoke detection performance up to a certain point.
 
-The 30-epoch model did not fully converge and produced lower performance. Increasing to 50 epochs significantly improved detection accuracy. Although 80 epochs achieved the highest numerical metrics, the improvement over 50 epochs was relatively small compared with the additional computational cost.
+The 30-epoch model did not fully converge and produced lower performance. Increasing to 50 epochs significantly improved detection accuracy and training stability. Extending training to 80 epochs produced the best numerical results, but the performance gains were relatively small compared with the additional computational cost.
 
-Therefore, **50 epochs provides the best balance between detection accuracy, convergence stability, and training efficiency**, while **80 epochs achieves the best absolute performance**.
+Therefore, **50 epochs provides the best practical balance between accuracy and efficiency**, while **80 epochs achieves the highest absolute detection performance and can be preferred when computational cost is less important**.
 
 ---
 

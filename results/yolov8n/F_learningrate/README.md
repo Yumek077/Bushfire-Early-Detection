@@ -145,9 +145,7 @@ This experiment shows that the YOLOv8n wildfire detection model is relatively st
 - Lower learning rate slightly improved mAP50-95
 - Lower learning rate did not significantly improve overall detection performance
 - Cosine learning rate did not provide clear overall benefits
-- Default learning rate maintained better overall performance balance
-
-For wildfire smoke detection, maintaining balanced Precision, Recall, and stable convergence is more valuable than pursuing very small metric improvements.
+- Default learning rate maintained a strong overall balance between precision, recall, and convergence stability
 
 ---
 
@@ -155,17 +153,13 @@ For wildfire smoke detection, maintaining balanced Precision, Recall, and stable
 
 The F group experiments demonstrate that the current YOLOv8n configuration is not highly sensitive to learning rate changes.
 
-Although the lower learning rate strategy achieved a slightly higher mAP50-95 value, the improvement was very small.
+Although the lower learning rate strategy achieved a slightly higher mAP50-95 value, the improvement was very limited and did not produce clear overall detection advantages.
 
 The default learning rate configuration achieved:
 
-- Better overall Precision balance
+- Strong Precision performance
 - Stable convergence behavior
-- Reliable overall performance
-- Strong detection consistency
+- Reliable overall detection results
+- Balanced performance across all major metrics
 
-Therefore, the project will continue using:
-
-**Default Learning Rate (lr0 = 0.01)**
-
-as the standard training setting for future experiments.
+Therefore, **Default Learning Rate (lr0 = 0.01)** remains the preferred standard training setting for later experiments in this project.
