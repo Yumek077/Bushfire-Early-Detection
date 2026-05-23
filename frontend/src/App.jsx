@@ -147,7 +147,6 @@ function App() {
       videoResult={videoResult}
       loading={loading}
       error={error}
-      history={history}
       handleFileChange={handleFileChange}
       handleDetect={handleDetect}
       handleClear={handleClear}
